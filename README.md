@@ -1,4 +1,7 @@
-# vue-hello
+# My Music Player
+
+## Screenshots
+![img](https://github.com/AshYao/MusicPlayer/blob/master/public/screenshot1.png)
 
 ## Project setup
 ```
