@@ -1,6 +1,6 @@
 # My Music Player
 
-## Screenshots
+## Software Demo
 ![img](https://github.com/AshYao/MusicPlayer/blob/master/public/screenshot2.gif)
 
 ## Project setup
