@@ -1,7 +1,7 @@
 # My Music Player
 
 ## Screenshots
-![img](https://github.com/AshYao/MusicPlayer/blob/master/public/screenshot1.png)
+![img](https://github.com/AshYao/MusicPlayer/blob/master/public/screenshot2.gif)
 
 ## Project setup
 ```
