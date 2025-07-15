@@ -36,112 +36,108 @@
 
 <script>
 export default {
-  name: 'HelloWorld',
-  data () {
-    return {
-      current: {},
-      index: 0,
-      isPlaying: false,
-      currentTime: 0,
-      trackDuration: 266,
-      currentProgressBar: 0,
-      checkingCurrentPositionInTrack: "",
-      songs:[
-      {
-						title: "GLAMOROUS SKY",
-						artist: "中島美嘉",
-						src: require('../assets/GLAMOROUSSKY.mp3')
-					},
-					{
-						title: "ORION",
-						artist: "中島美嘉",
-						src: require('../assets/ORION.mp3')
-					},
-          {
-						title: "雪の華",
-						artist: "中島美嘉",
-						src: require('../assets/雪の華.mp3')
-					}
-
-      ],
-      player: new Audio()
-    }
-  },
-  methods: {
-    timeFormat: function(s) {
-			return (s - (s %= 60)) / 60 + (9 < s ? ":" : ":0") + s;
-		},
-    getTrackDuration: function() {
+	name: "HelloWorld",
+	data() {
+		return {
+			current: {},
+			index: 0,
+			isPlaying: false,
+			currentTime: 0,
+			trackDuration: 266,
+			currentProgressBar: 0,
+			checkingCurrentPositionInTrack: "",
+			songs: [
+				{
+					title: "GLAMOROUS SKY",
+					artist: "中島美嘉",
+					src: require("../assets/GLAMOROUSSKY.mp3"),
+				},
+				{
+					title: "ORION",
+					artist: "中島美嘉",
+					src: require("../assets/ORION.mp3"),
+				},
+				{
+					title: "雪の華",
+					artist: "中島美嘉",
+					src: require("../assets/雪の華.mp3"),
+				},
+			],
+			player: new Audio(),
+		};
+	},
+	methods: {
+		timeFormat: (s) => (s - (s %= 60)) / 60 + (9 < s ? ":" : ":0") + s,
+		getTrackDuration: function () {
 			this.trackDuration = Math.round(this.player.duration);
 		},
-    getCurrentTimeEverySecond: function() {
-			var that = this;
+		getCurrentTimeEverySecond: function () {
 			this.checkingCurrentPositionInTrack = setTimeout(
-				function() {
-					that.currentTime = Math.round(that.player.currentTime);
-					that.currentProgressBar =
-						that.player.currentTime / that.trackDuration * 100;
-					that.getCurrentTimeEverySecond();
-				}.bind(this),
-				1000
+				(() => {
+					this.currentTime = Math.round(this.player.currentTime);
+					this.currentProgressBar =
+						(this.player.currentTime / this.trackDuration) * 100;
+					this.getCurrentTimeEverySecond();
+				}).bind(this),
+				1000,
 			);
 		},
-    playAudio: function() {
-      this.getCurrentTimeEverySecond();
-      this.player.play();
-      this.player.addEventListener("loadedmetadata", this.getTrackDuration);
-      this.player.addEventListener('ended', this.handleEnded);
-      this.isPlaying = true;
+		playAudio: function () {
+			this.getCurrentTimeEverySecond();
+			this.player.play();
+			this.player.addEventListener("loadedmetadata", this.getTrackDuration);
+			this.player.addEventListener("ended", this.handleEnded);
+			this.isPlaying = true;
 		},
-		handleEnded: function() {
+		handleEnded: function () {
 			this.next();
 		},
-    play (song) {
-      if (typeof song.src != "undefined") {
-        this.current = song;
-        this.player.src = this.current.src;
-      }
-      this.playAudio();
-    },
-    pause () {
-      this.player.pause();
-      this.isPlaying = false;
-    },
-    next () {
-      this.index++;
-      if (this.index > this.songs.length - 1) {
-        this.index = 0;
-      }
-      this.player.pause();
-      this.currentlyPlaying = false;
+		play(song) {
+			if (typeof song.src !== "undefined") {
+				this.current = song;
+				this.player.src = this.current.src;
+			}
+			this.playAudio();
+		},
+		pause() {
+			this.player.pause();
+			this.isPlaying = false;
+		},
+		next() {
+			this.index++;
+			if (this.index > this.songs.length - 1) {
+				this.index = 0;
+			}
+			this.player.pause();
+			this.currentlyPlaying = false;
 			clearTimeout(this.checkingCurrentPositionInTrack);
-      this.player.currentTime = 0;
-      this.current = this.songs[this.index];
-      this.play(this.current);
-    },
-    prev () {
-      this.index--;
-      if (this.index < 0) {
-        this.index = this.songs.length - 1;
-      }
-      this.player.pause();
-      this.currentlyPlaying = false;
+			this.player.currentTime = 0;
+			this.current = this.songs[this.index];
+			this.play(this.current);
+		},
+		prev() {
+			this.index--;
+			if (this.index < 0) {
+				this.index = this.songs.length - 1;
+			}
+			this.player.pause();
+			this.currentlyPlaying = false;
 			clearTimeout(this.checkingCurrentPositionInTrack);
-      this.player.currentTime = 0;
-      this.current = this.songs[this.index];
-      this.play(this.current);
-    },
-    clickProgress: function(event){
-			if(this.isPlaying == true){
+			this.player.currentTime = 0;
+			this.current = this.songs[this.index];
+			this.play(this.current);
+		},
+		clickProgress: function (event) {
+			if (this.isPlaying === true) {
 				this.pause();
 			}
 			this.updateBar(event.pageX);
 		},
-		updateBar: function(x){
-			var progress = this.$refs.progress;
-			var maxduration = this.player.duration;
-			var position = x - progress.getBoundingClientRect().left;
-			var percentage = (100 * position) / progress.offsetWidth;
+		updateBar: function (x) {
+			const progress = this.$refs.progress;
+			const maxduration = this.player.duration;
+			const position = x - progress.getBoundingClientRect().left;
+			let percentage = (100 * position) / progress.offsetWidth;
 			if (percentage > 100) {
 				percentage = 100;
 			}
@@ -150,15 +146,15 @@ export default {
 			}
 			this.player.currentTime = Math.round((maxduration * percentage) / 100);
 			this.currentTime = this.player.currentTime;
-			this.currentProgressBar = this.currentTime / this.trackDuration * 100;
+			this.currentProgressBar = (this.currentTime / this.trackDuration) * 100;
 			this.playAudio();
-		}
-  },
-  created () {
-    this.current = this.songs[this.index];
-    this.player.src = this.current.src;
-  },
-  computed: {
+		},
+	},
+	created() {
+		this.current = this.songs[this.index];
+		this.player.src = this.current.src;
+	},
+	computed: {
 		currentTimeShow() {
 			return this.timeFormat(this.currentTime);
 		},
@@ -166,12 +162,12 @@ export default {
 			return this.timeFormat(this.trackDuration);
 		},
 	},
-  beforeUnmount: function() {
+	beforeUnmount: function () {
 		this.player.removeEventListener("ended", this.handleEnded);
 		this.player.removeEventListener("loadedmetadata", this.getTrackDuration);
 		clearTimeout(this.checkingCurrentPositionInTrack);
-	}
-}
+	},
+};
 </script>
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
