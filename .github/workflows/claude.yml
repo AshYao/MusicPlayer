@@ -31,7 +31,16 @@ jobs:
         with:
           fetch-depth: 1
 
+      - name: Authenticate GitHub CLI
+        run: |
+          echo "${GH_TOKEN}" | gh auth login --with-token
+          gh auth status
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
       - name: Run Claude PR Action
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         uses: anthropics/claude-code-action@beta
         with:
           anthropic_api_key: ${{ secrets.ANTHROPIC_API_KEY }}
