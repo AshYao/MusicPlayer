@@ -31,13 +31,6 @@ jobs:
         with:
           fetch-depth: 1
 
-      - name: Authenticate GitHub CLI
-        run: |
-          echo "${GH_TOKEN}" | gh auth login --with-token
-          gh auth status
-        env:
-          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-
       - name: Run Claude PR Action
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
