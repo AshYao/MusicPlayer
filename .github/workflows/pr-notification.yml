@@ -5,8 +5,23 @@ on:
     types: [opened, reopened, synchronize, labeled]
 
 jobs:
+  debug-info:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Debug PR Information
+        run: |
+          echo "Event action: ${{ github.event.action }}"
+          echo "PR author: ${{ github.event.pull_request.user.login }}"
+          echo "PR labels: ${{ toJSON(github.event.pull_request.labels) }}"
+          echo "Event label: ${{ github.event.label.name }}"
+          echo "Condition check:"
+          echo "  - Is labeled event with workflow:ready-for-review: ${{ github.event.action == 'labeled' && github.event.label.name == 'workflow:ready-for-review' }}"
+          echo "  - Is non-labeled event with workflow:ready-for-review label: ${{ github.event.action != 'labeled' && contains(github.event.pull_request.labels.*.name, 'workflow:ready-for-review') }}"
+          echo "  - Is amazon-q-developer: ${{ github.event.pull_request.user.login == 'amazon-q-developer' }}"
+
   notify-slack:
     runs-on: ubuntu-latest
+    needs: debug-info
     if: |
       (github.event.action == 'labeled' && github.event.label.name == 'workflow:ready-for-review') ||
       (github.event.action != 'labeled' && contains(github.event.pull_request.labels.*.name, 'workflow:ready-for-review')) ||
