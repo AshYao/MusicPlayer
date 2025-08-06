@@ -2,13 +2,14 @@ name: PR Notification
 
 on:
   pull_request:
-    types: [opened, synchronize, labeled]
+    types: [opened, reopened, synchronize, labeled]
 
 jobs:
   notify-slack:
     runs-on: ubuntu-latest
     if: |
-      contains(github.event.pull_request.labels.*.name, 'workflow:ready-for-review') ||
+      (github.event.action == 'labeled' && github.event.label.name == 'workflow:ready-for-review') ||
+      (github.event.action != 'labeled' && contains(github.event.pull_request.labels.*.name, 'workflow:ready-for-review')) ||
       github.event.pull_request.user.login == 'amazon-q-developer'
     steps:
       - name: Send Slack notification
