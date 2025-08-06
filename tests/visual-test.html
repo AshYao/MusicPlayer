@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Font Size Visual Test</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+            background-color: #f5f5f5;
+        }
+        .test-container {
+            background: white;
+            padding: 20px;
+            margin: 20px 0;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        .before-after {
+            display: flex;
+            gap: 40px;
+        }
+        .before, .after {
+            flex: 1;
+        }
+        .before h2, .after h2 {
+            color: #333;
+            border-bottom: 2px solid #ddd;
+            padding-bottom: 10px;
+        }
+        
+        /* Original styles */
+        .original-header {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 15px;
+            background-color: #0C4842;
+            color: #FFF;
+            margin-bottom: 20px;
+        }
+        .original-header h1 {
+            margin: 0;
+            /* Browser default font-size */
+        }
+        .original-song-title {
+            color: #53565A;
+            font-size: 32px;
+            font-weight: 700;
+            text-transform: uppercase;
+            text-align: center;
+            margin: 20px 0;
+        }
+        .original-playlist-title {
+            color: #0089A7;
+            font-size: 32px;
+            font-weight: 700;
+            text-align: center;
+            margin: 20px 0;
+        }
+        
+        /* New improved styles */
+        .new-header {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 15px;
+            background-color: #0C4842;
+            color: #FFF;
+            margin-bottom: 20px;
+        }
+        .new-header h1 {
+            font-size: 48px;
+            font-weight: 700;
+            margin: 0;
+        }
+        .new-song-title {
+            color: #53565A;
+            font-size: 42px;
+            font-weight: 700;
+            text-transform: uppercase;
+            text-align: center;
+            margin: 20px 0;
+        }
+        .new-playlist-title {
+            color: #0089A7;
+            font-size: 38px;
+            font-weight: 700;
+            text-align: center;
+            margin: 20px 0;
+        }
+        
+        /* Responsive test styles */
+        @media (max-width: 768px) {
+            .new-header h1 {
+                font-size: 36px;
+            }
+            .new-song-title {
+                font-size: 32px;
+            }
+            .new-playlist-title {
+                font-size: 28px;
+            }
+        }
+        
+        @media (max-width: 480px) {
+            .new-header h1 {
+                font-size: 28px;
+            }
+            .new-song-title {
+                font-size: 24px;
+            }
+            .new-playlist-title {
+                font-size: 22px;
+            }
+        }
+        
+        .responsive-note {
+            background: #e8f4f8;
+            padding: 15px;
+            border-left: 4px solid #0089A7;
+            margin: 20px 0;
+        }
+    </style>
+</head>
+<body>
+    <h1>Music Player Title Font Size Improvements</h1>
+    <p>This page demonstrates the font size changes made to the music player titles.</p>
+    
+    <div class="test-container">
+        <div class="before-after">
+            <div class="before">
+                <h2>Before (Original)</h2>
+                <div class="original-header">
+                    <h1>My Music Player</h1>
+                </div>
+                <div class="original-song-title">GLAMOROUS SKY - <span style="font-weight: 400;">中島美嘉</span></div>
+                <div class="original-playlist-title">The Playlist</div>
+            </div>
+            
+            <div class="after">
+                <h2>After (Improved)</h2>
+                <div class="new-header">
+                    <h1>My Music Player</h1>
+                </div>
+                <div class="new-song-title">GLAMOROUS SKY - <span style="font-weight: 400;">中島美嘉</span></div>
+                <div class="new-playlist-title">The Playlist</div>
+            </div>
+        </div>
+    </div>
+    
+    <div class="test-container">
+        <h2>Font Size Changes Summary</h2>
+        <ul>
+            <li><strong>Main App Title (h1):</strong> Browser default → 48px (50% increase)</li>
+            <li><strong>Song Title (h2):</strong> 32px → 42px (31% increase)</li>
+            <li><strong>Playlist Title (h3):</strong> 32px → 38px (19% increase)</li>
+        </ul>
+    </div>
+    
+    <div class="responsive-note">
+        <h3>📱 Responsive Design</h3>
+        <p>The font sizes automatically adjust for different screen sizes:</p>
+        <ul>
+            <li><strong>Tablet (≤768px):</strong> Main: 36px, Song: 32px, Playlist: 28px</li>
+            <li><strong>Mobile (≤480px):</strong> Main: 28px, Song: 24px, Playlist: 22px</li>
+        </ul>
+        <p><em>Resize your browser window to see the responsive behavior in action!</em></p>
+    </div>
+    
+    <div class="test-container">
+        <h2>Visual Hierarchy</h2>
+        <p>The new font sizes maintain a clear visual hierarchy:</p>
+        <ol>
+            <li><strong>Main Application Title</strong> - Largest (48px) - Most prominent</li>
+            <li><strong>Current Song Title</strong> - Medium (42px) - Secondary focus</li>
+            <li><strong>Playlist Section Title</strong> - Smaller (38px) - Supporting element</li>
+        </ol>
+    </div>
+</body>
+</html>

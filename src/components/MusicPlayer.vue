@@ -192,6 +192,11 @@ header {
         background-color: #0C4842;
         color: #FFF;
 }
+header h1 {
+        font-size: 48px;
+        font-weight: 700;
+        margin: 0;
+}
 main {
   width: 100%;
   max-width: 768px;
@@ -201,7 +206,7 @@ main {
 
 .song-title {
   color: #53565A;
-  font-size: 32px;
+  font-size: 42px;
   font-weight: 700;
   text-transform: uppercase;
   text-align: center;
@@ -275,7 +280,7 @@ button:hover {
 }
 .playlist h3 {
   color: #0089A7;
-  font-size: 32px;
+  font-size: 38px;
   font-weight: 700;
   margin-bottom: 20px;
   text-align: center;
@@ -295,6 +300,35 @@ button:hover {
 .playlist .song.playing {
   color: #FFF;
   background-image: linear-gradient(to right, #0089A7, #78C2C4);
+}
+
+/* Responsive design for mobile devices */
+@media (max-width: 768px) {
+  header h1 {
+    font-size: 36px;
+  }
+  
+  .song-title {
+    font-size: 32px;
+  }
+  
+  .playlist h3 {
+    font-size: 28px;
+  }
+}
+
+@media (max-width: 480px) {
+  header h1 {
+    font-size: 28px;
+  }
+  
+  .song-title {
+    font-size: 24px;
+  }
+  
+  .playlist h3 {
+    font-size: 22px;
+  }
 }
 </style>
 
