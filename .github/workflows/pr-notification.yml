@@ -8,8 +8,8 @@ jobs:
   notify-slack:
     runs-on: ubuntu-latest
     if: |
-      (github.event.action == 'labeled' && github.event.label.name == 'workflow:ready-for-review') ||
-      (github.event.action != 'labeled' && contains(github.event.pull_request.labels.*.name, 'workflow:ready-for-review')) ||
+      (github.event.action == 'labeled' && github.event.label.name == 'wf:ready-for-review') ||
+      (github.event.action != 'labeled' && contains(github.event.pull_request.labels.*.name, 'wf:ready-for-review')) ||
       startsWith(github.event.pull_request.user.login, 'amazon-q-developer')
     steps:
       - name: Send Slack notification

@@ -1,0 +1,49 @@
+name: Issue Notification
+
+on:
+  issues:
+    types: [opened, reopened, labeled]
+
+jobs:
+  notify-slack:
+    runs-on: ubuntu-latest
+    if: |
+      contains(github.event.issue.labels.*.name, 'amazon-q-developer') ||
+      contains(github.event.issue.labels.*.name, 'wf:claude-resolve') ||
+      contains(github.event.issue.labels.*.name, 'wf:manual-resolve')
+    steps:
+      - name: Send Slack notification for Amazon Q Developer
+        if: contains(github.event.issue.labels.*.name, 'amazon-q-developer')
+        uses: rtCamp/action-slack-notify@v2
+        env:
+          SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK_URL }}
+          SLACK_MESSAGE: |
+            :white_check_mark: GitHub Issue作成完了
+            :clipboard: タイトル: ${{ github.event.issue.title }}
+            :link: URL: ${{ github.event.issue.html_url }}
+            :label: ラベル: amazon-q-developer
+            :robot_face: Amazon Q による自動実装を推奨
+
+      - name: Send Slack notification for Claude resolve
+        if: contains(github.event.issue.labels.*.name, 'wf:claude-resolve')
+        uses: rtCamp/action-slack-notify@v2
+        env:
+          SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK_URL }}
+          SLACK_MESSAGE: |
+            :white_check_mark: GitHub Issue作成完了
+            :clipboard: タイトル: ${{ github.event.issue.title }}
+            :link: URL: ${{ github.event.issue.html_url }}
+            :label: ラベル: wf:claude-resolve
+            :robot_face: Claude Code による実装を推奨し、@claude にコメントしました
+
+      - name: Send Slack notification for manual resolve
+        if: contains(github.event.issue.labels.*.name, 'wf:manual-resolve')
+        uses: rtCamp/action-slack-notify@v2
+        env:
+          SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK_URL }}
+          SLACK_MESSAGE: |
+            :white_check_mark: GitHub Issue作成完了
+            :clipboard: タイトル: ${{ github.event.issue.title }}
+            :link: URL: ${{ github.event.issue.html_url }}
+            :label: ラベル: wf:manual-resolve
+            :male-technologist: 手動実装が推奨されます
