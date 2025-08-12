@@ -8,12 +8,21 @@ jobs:
   notify-slack:
     runs-on: ubuntu-latest
     if: |
-      contains(github.event.issue.labels.*.name, 'amazon-q-developer') ||
-      contains(github.event.issue.labels.*.name, 'wf:claude-resolve') ||
-      contains(github.event.issue.labels.*.name, 'wf:manual-resolve')
+      (github.event.action == 'labeled' && (
+        github.event.label.name == 'amazon-q-developer' ||
+        github.event.label.name == 'wf:claude-resolve' ||
+        github.event.label.name == 'wf:manual-resolve'
+      )) ||
+      (github.event.action != 'labeled' && (
+        contains(github.event.issue.labels.*.name, 'amazon-q-developer') ||
+        contains(github.event.issue.labels.*.name, 'wf:claude-resolve') ||
+        contains(github.event.issue.labels.*.name, 'wf:manual-resolve')
+      ))
     steps:
       - name: Send Slack notification for Amazon Q Developer
-        if: contains(github.event.issue.labels.*.name, 'amazon-q-developer')
+        if: |
+          (github.event.action == 'labeled' && github.event.label.name == 'amazon-q-developer') ||
+          (github.event.action != 'labeled' && contains(github.event.issue.labels.*.name, 'amazon-q-developer'))
         uses: rtCamp/action-slack-notify@v2
         env:
           SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK_URL }}
@@ -25,7 +34,9 @@ jobs:
             :robot_face: Amazon Q による自動実装を推奨
 
       - name: Send Slack notification for Claude resolve
-        if: contains(github.event.issue.labels.*.name, 'wf:claude-resolve')
+        if: |
+          (github.event.action == 'labeled' && github.event.label.name == 'wf:claude-resolve') ||
+          (github.event.action != 'labeled' && contains(github.event.issue.labels.*.name, 'wf:claude-resolve'))
         uses: rtCamp/action-slack-notify@v2
         env:
           SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK_URL }}
@@ -37,7 +48,9 @@ jobs:
             :robot_face: Claude Code による実装を推奨し、@claude にコメントしました
 
       - name: Send Slack notification for manual resolve
-        if: contains(github.event.issue.labels.*.name, 'wf:manual-resolve')
+        if: |
+          (github.event.action == 'labeled' && github.event.label.name == 'wf:manual-resolve') ||
+          (github.event.action != 'labeled' && contains(github.event.issue.labels.*.name, 'wf:manual-resolve'))
         uses: rtCamp/action-slack-notify@v2
         env:
           SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK_URL }}
