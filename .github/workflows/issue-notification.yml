@@ -9,20 +9,20 @@ jobs:
     runs-on: ubuntu-latest
     if: |
       (github.event.action == 'labeled' && (
-        github.event.label.name == 'amazon-q-developer' ||
+        github.event.label.name == 'Amazon Q development agent' ||
         github.event.label.name == 'wf:claude-resolve' ||
         github.event.label.name == 'wf:manual-resolve'
       )) ||
       (github.event.action != 'labeled' && (
-        contains(github.event.issue.labels.*.name, 'amazon-q-developer') ||
+        contains(github.event.issue.labels.*.name, 'Amazon Q development agent') ||
         contains(github.event.issue.labels.*.name, 'wf:claude-resolve') ||
         contains(github.event.issue.labels.*.name, 'wf:manual-resolve')
       ))
     steps:
       - name: Send Slack notification for Amazon Q Developer
         if: |
-          (github.event.action == 'labeled' && github.event.label.name == 'amazon-q-developer') ||
-          (github.event.action != 'labeled' && contains(github.event.issue.labels.*.name, 'amazon-q-developer'))
+          (github.event.action == 'labeled' && github.event.label.name == 'Amazon Q development agent') ||
+          (github.event.action != 'labeled' && contains(github.event.issue.labels.*.name, 'Amazon Q development agent'))
         uses: rtCamp/action-slack-notify@v2
         env:
           SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK_URL }}
@@ -30,7 +30,7 @@ jobs:
             :white_check_mark: GitHub Issue作成完了
             :clipboard: タイトル: ${{ github.event.issue.title }}
             :link: URL: ${{ github.event.issue.html_url }}
-            :label: ラベル: amazon-q-developer
+            :label: ラベル: Amazon Q development agent
             :robot_face: Amazon Q による自動実装を推奨
 
       - name: Send Slack notification for Claude resolve
