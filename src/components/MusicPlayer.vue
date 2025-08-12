@@ -12,6 +12,18 @@
           <button class="pause" v-else @click="pause">Pause</button>
           <button class="next" @click="next">Next</button>
         </div>
+        <div class="speed-controls">
+          <label class="speed-label">Speed:</label>
+          <select class="speed-selector" v-model="playbackSpeed" @change="changeSpeed">
+            <option value="0.5">0.5x</option>
+            <option value="0.75">0.75x</option>
+            <option value="1" selected>1x</option>
+            <option value="1.25">1.25x</option>
+            <option value="1.5">1.5x</option>
+            <option value="2">2x</option>
+          </select>
+          <span class="speed-shortcuts">Shortcuts: - / + / 1</span>
+        </div>
         <div class="timeAndProgress">
                                 <div class="currentTimeContainer">
                                         <span class="currentTime">{{ currentTimeShow }}</span>
@@ -46,6 +58,7 @@ export default {
                         trackDuration: 266,
                         currentProgressBar: 0,
                         checkingCurrentPositionInTrack: "",
+                        playbackSpeed: 1,
                         songs: [
                                 {
                                         title: "GLAMOROUS SKY",
@@ -88,6 +101,7 @@ export default {
                 },
                 playAudio: function () {
                         this.getCurrentTimeEverySecond();
+                        this.player.playbackRate = this.playbackSpeed;
                         this.player.play();
                         this.player.addEventListener("loadedmetadata", this.getTrackDuration);
                         this.player.addEventListener("ended", this.handleEnded);
@@ -153,10 +167,49 @@ export default {
                         this.currentProgressBar = (this.currentTime / this.trackDuration) * 100;
                         this.playAudio();
                 },
+                changeSpeed: function() {
+                        this.player.playbackRate = this.playbackSpeed;
+                },
+                handleKeydown: function(event) {
+                        if (event.target.tagName === 'INPUT' || event.target.tagName === 'TEXTAREA') {
+                                return;
+                        }
+                        
+                        if (event.key === '-' || event.key === '_') {
+                                event.preventDefault();
+                                const speeds = [0.5, 0.75, 1, 1.25, 1.5, 2];
+                                const currentIndex = speeds.indexOf(this.playbackSpeed);
+                                if (currentIndex > 0) {
+                                        this.playbackSpeed = speeds[currentIndex - 1];
+                                        this.changeSpeed();
+                                }
+                        } else if (event.key === '+' || event.key === '=') {
+                                event.preventDefault();
+                                const speeds = [0.5, 0.75, 1, 1.25, 1.5, 2];
+                                const currentIndex = speeds.indexOf(this.playbackSpeed);
+                                if (currentIndex < speeds.length - 1) {
+                                        this.playbackSpeed = speeds[currentIndex + 1];
+                                        this.changeSpeed();
+                                }
+                        } else if (event.key === '1') {
+                                event.preventDefault();
+                                this.playbackSpeed = 1;
+                                this.changeSpeed();
+                        }
+                },
         },
         created() {
                 this.current = this.songs[this.index];
                 this.player.src = this.current.src;
+        },
+        mounted() {
+                document.addEventListener('keydown', this.handleKeydown);
+        },
+        beforeUnmount: function() {
+                this.player.removeEventListener("ended", this.handleEnded);
+                this.player.removeEventListener("loadedmetadata", this.getTrackDuration);
+                clearTimeout(this.checkingCurrentPositionInTrack);
+                document.removeEventListener('keydown', this.handleKeydown);
         },
         computed: {
                 currentTimeShow() {
@@ -165,11 +218,6 @@ export default {
                 trackDurationShow() {
                         return this.timeFormat(this.trackDuration);
                 },
-        },
-        beforeUnmount: function () {
-                this.player.removeEventListener("ended", this.handleEnded);
-                this.player.removeEventListener("loadedmetadata", this.getTrackDuration);
-                clearTimeout(this.checkingCurrentPositionInTrack);
         },
 };
 </script>
@@ -295,6 +343,48 @@ button:hover {
 .playlist .song.playing {
   color: #FFF;
   background-image: linear-gradient(to right, #0089A7, #78C2C4);
+}
+
+.speed-controls {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 15px;
+  gap: 10px;
+}
+
+.speed-label {
+  color: #53565A;
+  font-weight: 600;
+  font-size: 16px;
+}
+
+.speed-selector {
+  padding: 8px 12px;
+  border: 2px solid #78C2C4;
+  border-radius: 6px;
+  background-color: #FFF;
+  color: #53565A;
+  font-size: 16px;
+  font-weight: 600;
+  cursor: pointer;
+  outline: none;
+}
+
+.speed-selector:hover {
+  border-color: #376B6D;
+  background-color: #f8f9fa;
+}
+
+.speed-selector:focus {
+  border-color: #0089A7;
+  box-shadow: 0 0 0 3px rgba(0, 137, 167, 0.2);
+}
+
+.speed-shortcuts {
+  color: #78C2C4;
+  font-size: 12px;
+  font-style: italic;
 }
 </style>
 
