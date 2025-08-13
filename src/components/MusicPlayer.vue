@@ -192,6 +192,11 @@ header {
         background-color: #0C4842;
         color: #FFF;
 }
+header h1 {
+        font-size: 48px;
+        font-weight: 700;
+        margin: 0;
+}
 main {
   width: 100%;
   max-width: 768px;
@@ -201,7 +206,7 @@ main {
 
 .song-title {
   color: #53565A;
-  font-size: 32px;
+  font-size: 40px;
   font-weight: 700;
   text-transform: uppercase;
   text-align: center;
@@ -275,7 +280,7 @@ button:hover {
 }
 .playlist h3 {
   color: #0089A7;
-  font-size: 32px;
+  font-size: 40px;
   font-weight: 700;
   margin-bottom: 20px;
   text-align: center;
