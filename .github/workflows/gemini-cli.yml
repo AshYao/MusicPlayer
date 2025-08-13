@@ -120,7 +120,7 @@ jobs:
           ${{  steps.get_context.outputs.is_pr == 'true' }}
         uses: 'actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683' # ratchet:actions/checkout@v4
         with:
-          token: '${{ steps.generate_token.outputs.token || secrets.REPO_SCOPED_TOKEN }}'
+          token: '${{ steps.generate_token.outputs.token || secrets.GITHUB_TOKEN }}'
           repository: '${{ github.repository }}'
           ref: 'refs/pull/${{ steps.get_context.outputs.issue_number }}/head'
           fetch-depth: 0
@@ -130,14 +130,14 @@ jobs:
           ${{  steps.get_context.outputs.is_pr == 'false' }}
         uses: 'actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683' # ratchet:actions/checkout@v4
         with:
-          token: '${{ steps.generate_token.outputs.token || secrets.REPO_SCOPED_TOKEN }}'
+          token: '${{ steps.generate_token.outputs.token || secrets.GITHUB_TOKEN }}'
           repository: '${{ github.repository }}'
           fetch-depth: 0
 
       - name: 'Acknowledge request'
         env:
           GITHUB_ACTOR: '${{ github.actor }}'
-          GITHUB_TOKEN: '${{ steps.generate_token.outputs.token || secrets.REPO_SCOPED_TOKEN }}'
+          GITHUB_TOKEN: '${{ steps.generate_token.outputs.token || secrets.GITHUB_TOKEN }}'
           ISSUE_NUMBER: '${{ steps.get_context.outputs.issue_number }}'
           REPOSITORY: '${{ github.repository }}'
           REQUEST_TYPE: '${{ steps.get_context.outputs.request_type }}'
@@ -153,7 +153,7 @@ jobs:
       - name: 'Get description'
         id: 'get_description'
         env:
-          GITHUB_TOKEN: '${{ steps.generate_token.outputs.token || secrets.REPO_SCOPED_TOKEN }}'
+          GITHUB_TOKEN: '${{ steps.generate_token.outputs.token || secrets.GITHUB_TOKEN }}'
           IS_PR: '${{ steps.get_context.outputs.is_pr }}'
           ISSUE_NUMBER: '${{ steps.get_context.outputs.issue_number }}'
         run: |-
@@ -172,7 +172,7 @@ jobs:
       - name: 'Get comments'
         id: 'get_comments'
         env:
-          GITHUB_TOKEN: '${{ steps.generate_token.outputs.token || secrets.REPO_SCOPED_TOKEN }}'
+          GITHUB_TOKEN: '${{ steps.generate_token.outputs.token || secrets.GITHUB_TOKEN }}'
           IS_PR: '${{ steps.get_context.outputs.is_pr }}'
           ISSUE_NUMBER: '${{ steps.get_context.outputs.issue_number }}'
         run: |-
@@ -190,9 +190,9 @@ jobs:
 
       - name: 'Run Gemini'
         id: 'run_gemini'
-        uses: 'google-github-actions/run-gemini-cli@v0'
+        uses: './'
         env:
-          GITHUB_TOKEN: '${{ steps.generate_token.outputs.token || secrets.REPO_SCOPED_TOKEN }}'
+          GITHUB_TOKEN: '${{ steps.generate_token.outputs.token || secrets.GITHUB_TOKEN }}'
           REPOSITORY: '${{ github.repository }}'
           USER_REQUEST: '${{ steps.get_context.outputs.user_request }}'
           ISSUE_NUMBER: '${{ steps.get_context.outputs.issue_number }}'
@@ -209,7 +209,7 @@ jobs:
             {
               "maxSessionTurns": 50,
               "telemetry": {
-                "enabled": false,
+                "enabled": true,
                 "target": "gcp"
               }
             }
