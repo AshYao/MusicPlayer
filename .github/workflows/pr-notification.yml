@@ -17,9 +17,9 @@ jobs:
         env:
           SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK_URL }}
           SLACK_MESSAGE: |
-            :white_check_mark: GitHub PR作成完了
-            :file_folder: リポジトリ: ${{ github.repository }}
-            :clipboard: タイトル: ${{ github.event.pull_request.title }}
-            :link: URL: ${{ github.event.pull_request.html_url }}
-            :zap: ブランチ: ${{ github.event.pull_request.head.ref }} → ${{ github.event.pull_request.base.ref }}
+            :white_check_mark: **GitHub PR作成完了**
+            :file_folder: **リポジトリ**: ${{ github.repository }}
+            :clipboard: **タイトル**: ${{ github.event.pull_request.title }}
+            :link: **URL**: ${{ github.event.pull_request.html_url }}
+            :zap: **ブランチ**: ${{ github.event.pull_request.head.ref }} → ${{ github.event.pull_request.base.ref }}
             :robot_face: AI実装が完了しました。コードレビューお願いします 

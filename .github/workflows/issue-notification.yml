@@ -27,11 +27,11 @@ jobs:
         env:
           SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK_URL }}
           SLACK_MESSAGE: |
-            :white_check_mark: GitHub Issue作成完了
-            :file_folder: リポジトリ: ${{ github.repository }}
-            :clipboard: タイトル: ${{ github.event.issue.title }}
-            :link: URL: ${{ github.event.issue.html_url }}
-            :label: ラベル: Amazon Q development agent
+            :white_check_mark: **GitHub Issue作成完了**
+            :file_folder: **リポジトリ**: ${{ github.repository }}
+            :clipboard: **タイトル**: ${{ github.event.issue.title }}
+            :link: **URL**: ${{ github.event.issue.html_url }}
+            :label: **ラベル**: Amazon Q development agent
             :robot_face: Amazon Q による自動実装を推奨
 
       - name: Send Slack notification for Claude resolve
@@ -42,11 +42,11 @@ jobs:
         env:
           SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK_URL }}
           SLACK_MESSAGE: |
-            :white_check_mark: GitHub Issue作成完了
-            :file_folder: リポジトリ: ${{ github.repository }}
-            :clipboard: タイトル: ${{ github.event.issue.title }}
-            :link: URL: ${{ github.event.issue.html_url }}
-            :label: ラベル: wf:claude-resolve
+            :white_check_mark: **GitHub Issue作成完了**
+            :file_folder: **リポジトリ**: ${{ github.repository }}
+            :clipboard: **タイトル**: ${{ github.event.issue.title }}
+            :link: **URL**: ${{ github.event.issue.html_url }}
+            :label: **ラベル**: wf:claude-resolve
             :robot_face: Claude Code による実装を推奨し、@claude にコメントしました
 
       - name: Send Slack notification for manual resolve
@@ -57,9 +57,9 @@ jobs:
         env:
           SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK_URL }}
           SLACK_MESSAGE: |
-            :white_check_mark: GitHub Issue作成完了
-            :file_folder: リポジトリ: ${{ github.repository }}
-            :clipboard: タイトル: ${{ github.event.issue.title }}
-            :link: URL: ${{ github.event.issue.html_url }}
-            :label: ラベル: wf:manual-resolve
+            :white_check_mark: **GitHub Issue作成完了**
+            :file_folder: **リポジトリ**: ${{ github.repository }}
+            :clipboard: **タイトル**: ${{ github.event.issue.title }}
+            :link: **URL**: ${{ github.event.issue.html_url }}
+            :label: **ラベル**: wf:manual-resolve
             :male-technologist: 手動実装が推奨されます
