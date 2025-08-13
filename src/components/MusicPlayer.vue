@@ -12,6 +12,15 @@
           <button class="pause" v-else @click="pause">Pause</button>
           <button class="next" @click="next">Next</button>
         </div>
+        <div class="speed-controls">
+          <span class="speed-label">Speed:</span>
+          <button v-for="speed in speedOptions" :key="speed" 
+                  @click="setSpeed(speed)" 
+                  :class="currentSpeed === speed ? 'speed-btn active' : 'speed-btn'">
+            {{ speed }}x
+          </button>
+          <span class="current-speed">{{ currentSpeed }}x</span>
+        </div>
         <div class="timeAndProgress">
                                 <div class="currentTimeContainer">
                                         <span class="currentTime">{{ currentTimeShow }}</span>
@@ -36,141 +45,190 @@
 
 <script>
 export default {
-        name: "HelloWorld",
-        data() {
-                return {
-                        current: {},
-                        index: 0,
-                        isPlaying: false,
-                        currentTime: 0,
-                        trackDuration: 266,
-                        currentProgressBar: 0,
-                        checkingCurrentPositionInTrack: "",
-                        songs: [
-                                {
-                                        title: "GLAMOROUS SKY",
-                                        artist: "中島美嘉",
-                                        src: require("../assets/GLAMOROUSSKY.mp3"),
-                                },
-                                {
-                                        title: "ORION",
-                                        artist: "中島美嘉",
-                                        src: require("../assets/ORION.mp3"),
-                                },
-                                {
-                                        title: "雪の華",
-                                        artist: "中島美嘉",
-                                        src: require("../assets/雪の華.mp3"),
-                                },
-                        ],
-                        player: new Audio(),
-                };
-        },
-        methods: {
-                timeFormat: (s) => {
-                        const minutes = Math.floor(s / 60);
-                        const seconds = Math.floor(s % 60);
-                        return minutes + (seconds < 10 ? ":0" : ":") + seconds;
-                },
-                getTrackDuration: function () {
-                        this.trackDuration = Math.round(this.player.duration);
-                },
-                getCurrentTimeEverySecond: function () {
-                        this.checkingCurrentPositionInTrack = setTimeout(
-                                (() => {
-                                        this.currentTime = Math.round(this.player.currentTime);
-                                        this.currentProgressBar =
-                                                (this.player.currentTime / this.trackDuration) * 100;
-                                        this.getCurrentTimeEverySecond();
-                                }).bind(this),
-                                1000,
-                        );
-                },
-                playAudio: function () {
-                        this.getCurrentTimeEverySecond();
-                        this.player.play();
-                        this.player.addEventListener("loadedmetadata", this.getTrackDuration);
-                        this.player.addEventListener("ended", this.handleEnded);
-                        this.isPlaying = true;
-                },
-                handleEnded: function () {
-                        this.next();
-                },
-                play(song) {
-                        if (typeof song.src !== "undefined") {
-                                this.current = song;
-                                this.player.src = this.current.src;
-                        }
-                        this.playAudio();
-                },
-                pause() {
-                        this.player.pause();
-                        this.isPlaying = false;
-                },
-                next() {
-                        this.index++;
-                        if (this.index > this.songs.length - 1) {
-                                this.index = 0;
-                        }
-                        this.player.pause();
-                        this.currentlyPlaying = false;
-                        clearTimeout(this.checkingCurrentPositionInTrack);
-                        this.player.currentTime = 0;
-                        this.current = this.songs[this.index];
-                        this.play(this.current);
-                },
-                prev() {
-                        this.index--;
-                        if (this.index < 0) {
-                                this.index = this.songs.length - 1;
-                        }
-                        this.player.pause();
-                        this.currentlyPlaying = false;
-                        clearTimeout(this.checkingCurrentPositionInTrack);
-                        this.player.currentTime = 0;
-                        this.current = this.songs[this.index];
-                        this.play(this.current);
-                },
-                clickProgress: function (event) {
-                        if (this.isPlaying === true) {
-                                this.pause();
-                        }
-                        this.updateBar(event.pageX);
-                },
-                updateBar: function (x) {
-                        const progress = this.$refs.progress;
-                        const maxduration = this.player.duration;
-                        const position = x - progress.getBoundingClientRect().left;
-                        let percentage = (100 * position) / progress.offsetWidth;
-                        if (percentage > 100) {
-                                percentage = 100;
-                        }
-                        if (percentage < 0) {
-                                percentage = 0;
-                        }
-                        this.player.currentTime = Math.round((maxduration * percentage) / 100);
-                        this.currentTime = this.player.currentTime;
-                        this.currentProgressBar = (this.currentTime / this.trackDuration) * 100;
-                        this.playAudio();
-                },
-        },
-        created() {
-                this.current = this.songs[this.index];
-                this.player.src = this.current.src;
-        },
-        computed: {
-                currentTimeShow() {
-                        return this.timeFormat(this.currentTime);
-                },
-                trackDurationShow() {
-                        return this.timeFormat(this.trackDuration);
-                },
-        },
-        beforeUnmount: function () {
-                this.player.removeEventListener("ended", this.handleEnded);
-                this.player.removeEventListener("loadedmetadata", this.getTrackDuration);
-                clearTimeout(this.checkingCurrentPositionInTrack);
-        },
+	name: "HelloWorld",
+	data() {
+		return {
+			current: {},
+			index: 0,
+			isPlaying: false,
+			currentTime: 0,
+			trackDuration: 266,
+			currentProgressBar: 0,
+			checkingCurrentPositionInTrack: "",
+			currentSpeed: 1,
+			speedOptions: [0.5, 0.75, 1, 1.25, 1.5, 2],
+			songs: [
+				{
+					title: "GLAMOROUS SKY",
+					artist: "中島美嘉",
+					src: require("../assets/GLAMOROUSSKY.mp3"),
+				},
+				{
+					title: "ORION",
+					artist: "中島美嘉",
+					src: require("../assets/ORION.mp3"),
+				},
+				{
+					title: "雪の華",
+					artist: "中島美嘉",
+					src: require("../assets/雪の華.mp3"),
+				},
+			],
+			player: new Audio(),
+		};
+	},
+	methods: {
+		timeFormat: (s) => {
+			const minutes = Math.floor(s / 60);
+			const seconds = Math.floor(s % 60);
+			return minutes + (seconds < 10 ? ":0" : ":") + seconds;
+		},
+		getTrackDuration: function () {
+			this.trackDuration = Math.round(this.player.duration);
+		},
+		getCurrentTimeEverySecond: function () {
+			this.checkingCurrentPositionInTrack = setTimeout(
+				(() => {
+					this.currentTime = Math.round(this.player.currentTime);
+					this.currentProgressBar =
+						(this.player.currentTime / this.trackDuration) * 100;
+					this.getCurrentTimeEverySecond();
+				}).bind(this),
+				1000,
+			);
+		},
+		playAudio: function () {
+			this.getCurrentTimeEverySecond();
+			this.player.playbackRate = this.currentSpeed;
+			this.player.play();
+			this.player.addEventListener("loadedmetadata", this.getTrackDuration);
+			this.player.addEventListener("ended", this.handleEnded);
+			this.isPlaying = true;
+		},
+		handleEnded: function () {
+			this.next();
+		},
+		play(song) {
+			if (typeof song.src !== "undefined") {
+				this.current = song;
+				this.player.src = this.current.src;
+			}
+			this.playAudio();
+		},
+		setSpeed: function (speed) {
+			this.currentSpeed = speed;
+			this.player.playbackRate = speed;
+		},
+		increaseSpeed: function () {
+			const currentIndex = this.speedOptions.indexOf(this.currentSpeed);
+			if (currentIndex < this.speedOptions.length - 1) {
+				this.setSpeed(this.speedOptions[currentIndex + 1]);
+			}
+		},
+		decreaseSpeed: function () {
+			const currentIndex = this.speedOptions.indexOf(this.currentSpeed);
+			if (currentIndex > 0) {
+				this.setSpeed(this.speedOptions[currentIndex - 1]);
+			}
+		},
+		resetSpeed: function () {
+			this.setSpeed(1);
+		},
+		handleKeyDown: function (event) {
+			if (
+				event.target.tagName === "INPUT" ||
+				event.target.tagName === "TEXTAREA"
+			) {
+				return;
+			}
+			switch (event.key) {
+				case "+":
+				case "=":
+					event.preventDefault();
+					this.increaseSpeed();
+					break;
+				case "-":
+					event.preventDefault();
+					this.decreaseSpeed();
+					break;
+				case "0":
+					event.preventDefault();
+					this.resetSpeed();
+					break;
+			}
+		},
+		pause() {
+			this.player.pause();
+			this.isPlaying = false;
+		},
+		next() {
+			this.index++;
+			if (this.index > this.songs.length - 1) {
+				this.index = 0;
+			}
+			this.player.pause();
+			this.currentlyPlaying = false;
+			clearTimeout(this.checkingCurrentPositionInTrack);
+			this.player.currentTime = 0;
+			this.current = this.songs[this.index];
+			this.play(this.current);
+		},
+		prev() {
+			this.index--;
+			if (this.index < 0) {
+				this.index = this.songs.length - 1;
+			}
+			this.player.pause();
+			this.currentlyPlaying = false;
+			clearTimeout(this.checkingCurrentPositionInTrack);
+			this.player.currentTime = 0;
+			this.current = this.songs[this.index];
+			this.play(this.current);
+		},
+		clickProgress: function (event) {
+			if (this.isPlaying === true) {
+				this.pause();
+			}
+			this.updateBar(event.pageX);
+		},
+		updateBar: function (x) {
+			const progress = this.$refs.progress;
+			const maxduration = this.player.duration;
+			const position = x - progress.getBoundingClientRect().left;
+			let percentage = (100 * position) / progress.offsetWidth;
+			if (percentage > 100) {
+				percentage = 100;
+			}
+			if (percentage < 0) {
+				percentage = 0;
+			}
+			this.player.currentTime = Math.round((maxduration * percentage) / 100);
+			this.currentTime = this.player.currentTime;
+			this.currentProgressBar = (this.currentTime / this.trackDuration) * 100;
+			this.playAudio();
+		},
+	},
+	created() {
+		this.current = this.songs[this.index];
+		this.player.src = this.current.src;
+	},
+	mounted() {
+		window.addEventListener("keydown", this.handleKeyDown);
+	},
+	beforeUnmount: function () {
+		this.player.removeEventListener("ended", this.handleEnded);
+		this.player.removeEventListener("loadedmetadata", this.getTrackDuration);
+		clearTimeout(this.checkingCurrentPositionInTrack);
+		window.removeEventListener("keydown", this.handleKeyDown);
+	},
+	computed: {
+		currentTimeShow() {
+			return this.timeFormat(this.currentTime);
+		},
+		trackDurationShow() {
+			return this.timeFormat(this.trackDuration);
+		},
+	},
 };
 </script>
 
@@ -295,6 +353,57 @@ button:hover {
 .playlist .song.playing {
   color: #FFF;
   background-image: linear-gradient(to right, #0089A7, #78C2C4);
+}
+
+.speed-controls {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 15px;
+  gap: 8px;
+  background-color: rgba(120, 194, 196, 0.1);
+  border-radius: 8px;
+  margin: 10px 0;
+}
+
+.speed-label {
+  font-size: 16px;
+  font-weight: 600;
+  color: #53565A;
+  margin-right: 10px;
+}
+
+.speed-btn {
+  font-size: 14px;
+  font-weight: 600;
+  padding: 6px 12px;
+  border-radius: 4px;
+  color: #376B6D;
+  background-color: rgba(255, 255, 255, 0.8);
+  border: 1px solid #78C2C4;
+  transition: all 0.2s ease;
+}
+
+.speed-btn:hover {
+  background-color: #78C2C4;
+  color: #FFF;
+  opacity: 1;
+}
+
+.speed-btn.active {
+  background-color: #376B6D;
+  color: #FFF;
+  border-color: #376B6D;
+}
+
+.current-speed {
+  font-size: 16px;
+  font-weight: 700;
+  color: #376B6D;
+  margin-left: 10px;
+  padding: 6px 10px;
+  background-color: rgba(55, 107, 109, 0.1);
+  border-radius: 4px;
 }
 </style>
 
