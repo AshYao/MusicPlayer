@@ -28,6 +28,7 @@ jobs:
           SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK_URL }}
           SLACK_MESSAGE: |
             :white_check_mark: GitHub Issue作成完了
+            :file_folder: リポジトリ: ${{ github.repository }}
             :clipboard: タイトル: ${{ github.event.issue.title }}
             :link: URL: ${{ github.event.issue.html_url }}
             :label: ラベル: Amazon Q development agent
@@ -42,6 +43,7 @@ jobs:
           SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK_URL }}
           SLACK_MESSAGE: |
             :white_check_mark: GitHub Issue作成完了
+            :file_folder: リポジトリ: ${{ github.repository }}
             :clipboard: タイトル: ${{ github.event.issue.title }}
             :link: URL: ${{ github.event.issue.html_url }}
             :label: ラベル: wf:claude-resolve
@@ -56,6 +58,7 @@ jobs:
           SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK_URL }}
           SLACK_MESSAGE: |
             :white_check_mark: GitHub Issue作成完了
+            :file_folder: リポジトリ: ${{ github.repository }}
             :clipboard: タイトル: ${{ github.event.issue.title }}
             :link: URL: ${{ github.event.issue.html_url }}
             :label: ラベル: wf:manual-resolve
