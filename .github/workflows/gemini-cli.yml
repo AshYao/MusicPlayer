@@ -262,7 +262,7 @@ jobs:
                         - For Issues: `gh issue comment --edit <comment-id> --body "<updated plan>"`
                      3. The checklist should only be maintained as a comment on the issue or PR. Do not track or update the checklist in code files.
                - If the fix requires code changes, determine which files and lines are affected. If clarification is needed, note any questions for the user.
-               - Make the necessary code or documentation changes using the available tools (e.g., `write_file`). Ensure all changes follow project conventions and best practices. Reference all shell variables as `"${VAR}"` (with quotes and braces) to prevent errors.
+               - Make the necessary code or documentation changes using the available tools. Ensure all changes follow project conventions and best practices. Reference all shell variables as `"${VAR}"` (with quotes and braces) to prevent errors.
                - Run any relevant tests or checks to verify the fix works as intended. If possible, provide evidence (test output, screenshots, etc.) that the issue is resolved.
                - **Branching and Committing**:
                  - **NEVER commit directly to the `main` branch.**
@@ -276,7 +276,7 @@ jobs:
                    - `git commit -m "feat: <describe the fix>"`
                    - `git push origin issue/${ISSUE_NUMBER}/my-fix`
                    - After pushing, you can create a pull request: `gh pr create --title "Fixes #${ISSUE_NUMBER}: <short title>" --body "This PR addresses issue #${ISSUE_NUMBER}."`
-               - Summarize what was changed and why in a markdown file: `write_file("response.md", "<your response here>")`
+               - Summarize what was changed and why.
                - Post the response as a comment:
                  - For PRs: `gh pr comment "${ISSUE_NUMBER}" --body-file response.md`
                  - For Issues: `gh issue comment "${ISSUE_NUMBER}" --body-file response.md`
